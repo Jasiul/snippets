@@ -1,0 +1,177 @@
+###########
+#loading into a collection X in a db Y data with documents
+mongoimport --db Y --collection X --file dane.txt --jsonArray
+
+###############
+#Creating a text index for an attribute
+db.X.createIndex({ favorite: "text"})
+
+###########
+#searching for documents including multiple words
+db.X.find ({
+    $text: {$text: {$search: "coffee Milk cake"}}},
+    {favorite: 1})
+#or
+db.X.find({$text: {$search: "comodo dolor"}})
+
+#######
+#searching for documents including a phrase 
+db.X.find ({ $text: {$search: "\" ice cream\""}}, {favorite:1})
+
+###########
+#text index
+db.X.createIndex({about: "text"})
+
+#########
+#finding and counting
+db.X.find({$text: {$search: "culpa"}}, {about: 1}).count()
+
+#########
+#new attribute
+db.X.update ({
+    name: "Kelli Morton"},
+    {$set: {nowePole: "nowePole"}})
+
+#########
+#unique index
+db.X.createIndex(
+    {nowePole: 1},
+    {unique: true})
+
+########
+#drop
+db.X.drop()
+
+######
+#distinct info with 1 condition
+db.X.find({address: {$regex { "Virgimia *"}}, {name: 1, gender: 1, age: 1 }})
+
+########
+#number of documents with an attribute
+db.X.find({eyeColor: {$exists = true}}).count()
+
+#########
+#adding an attribute to filtered documents
+db.X.update({age: {$gt: 30}}, {$set: {'experience': true}}, {multi: true})
+
+########
+#counting 2 attributes distinctly with same condition
+db.X.agregate([{$match: {age: {gt:20}}, {$group: {_gender: "$gender", total: {$sum: 1}}])
+
+#########
+#sort by into json
+db.Film.find().sort( { srednia_ocena: -1 } ).pretty()
+
+#######
+#create collection, add document
+db.createCollection("Film")
+        db.Film.insert([
+                {
+                        tytul: 'Back to the Future',
+                        rezyser: 'Robert Zemeckis',
+                        rok_produkcji: 1985,
+                        srednia_ocena: 7.4,
+                        producent: [
+                                {
+                                        nazwa_producenta: 'Neil Canton',
+                                        kraj: 'USA',
+                                        waga: 1,
+                                },
+                                {
+                                        nazwa_producenta: 'Bob Gale',
+                                        kraj: 'USA',
+                                        waga: 2,
+                                },
+                                {
+                                        nazwa_producenta: 'Kathleen Kennedy     ',
+                                        kraj: 'USA',
+                                        waga: 3,
+                                }
+                        ],
+                        oceny: [
+                                {
+                                        data_oceny: '21.5.2015',
+                                        wartosc: 6,
+                                },
+                                {
+                                        data_oceny: '15.3.2016',
+                                        wartosc: 8,
+                                },
+                                {
+                                        data_oceny: '23.4.2016',
+                                        wartosc: 7,
+                                }
+                        ]
+                },
+         
+                {
+                        tytul: 'The Bourne Ultimatum',
+                        rezyser: 'Paul Greengrass',
+                        rok_produkcji: 2007,
+                        srednia_ocena: 7.8,
+                        producent: [
+                                {
+                                        nazwa_producenta: 'MP BETA Productions',
+                                        kraj: 'USA',
+                                        waga: 2,
+                                },
+                                {
+                                        nazwa_producenta: 'The Kennedy/Marshall Company',
+                                        kraj: 'USA',
+                                        waga: 2,
+                                },
+                                {
+                                        nazwa_producenta: 'Ludlum Entertainment',
+                                        kraj: 'USA',
+                                        waga: 2,
+                                }
+                        ],
+                        oceny: [
+                                {
+                                        data_oceny: '1.1.2016',
+                                        wartosc: 6,
+                                },
+                                {
+                                        data_oceny: '21.2.2016',
+                                        wartosc: 9,
+                                },
+                                {
+                                        data_oceny: '29.4.2016',
+                                        wartosc: 8,
+                                }
+                        ]
+                },
+         
+                {
+                        tytul: 'The Lord of the Rings: The Fellowship of the Ring',
+                        rezyser: 'Peter Jackson',
+                        rok_produkcji: 2001,
+                        srednia_ocena: 8.0,
+                        producent: [
+                                {
+                                        nazwa_producenta: 'WingNut Films',
+                                        kraj: 'USA',
+                                        waga: 1,
+                                },
+                                {
+                                        nazwa_producenta: 'The Saul Zaentz Company',
+                                        kraj: 'New Zealand',
+                                        waga: 2,
+                                },
+                        ],
+                        oceny: [
+                                {
+                                        data_oceny: '24.12.2015',
+                                        wartosc: 5,
+                                },
+                                {
+                                        data_oceny: '3.2.2016',
+                                        wartosc: 10,
+                                },
+                                {
+                                        data_oceny: '21.4.2016',
+                                        wartosc: 8,
+                                }
+                        ]
+                },
+        ])
